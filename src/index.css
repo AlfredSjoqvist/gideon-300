@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-claude-bg text-claude-text transition-colors duration-500 ease-in-out;
+  }
+  .dark body {
+    @apply bg-claude-darkBg text-claude-darkText;
+  }
+}
