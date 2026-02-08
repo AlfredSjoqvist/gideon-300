@@ -101,32 +101,45 @@ export default function GideonBlog() {
                 <p className="text-xs tracking-widest uppercase">Decrypting Intelligence...</p>
               </div>
             ) : entry ? (
-              <article className="
-                /* Typography & Layout */
+             <article className="
+                /* --- TYPOGRAPHY BASE --- */
                 prose prose-lg dark:prose-invert max-w-none
                 prose-headings:font-serif prose-headings:font-bold 
                 
-                /* Headings */
-                prose-h1:text-4xl prose-h1:mb-8 
-                prose-h2:text-2xl prose-h2:mt-12 prose-h2:border-b prose-h2:pb-2 prose-h2:border-gray-200 dark:prose-h2:border-gray-800
-                prose-h3:text-xl prose-h3:mt-8 prose-h3:uppercase prose-h3:tracking-wide prose-h3:text-gray-500
-                prose-h4:text-lg prose-h4:text-blue-600 dark:prose-h4:text-blue-400 prose-h4:mt-6
+                /* --- HEADINGS --- */
+                /* H1: Main Title (Huge & Serif) */
+                prose-h1:text-4xl prose-h1:mb-8 prose-h1:leading-tight
                 
-                /* Body Text */
-                prose-p:leading-relaxed prose-p:mb-6
+                /* H2: Section Dividers (Bordered) */
+                prose-h2:text-2xl prose-h2:mt-12 prose-h2:border-b prose-h2:pb-2 
+                prose-h2:border-gray-200 dark:prose-h2:border-gray-800
                 
-                /* Links */
-                prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+                /* H3: Labels (Uppercase & Tracking) */
+                prose-h3:text-lg prose-h3:mt-8 prose-h3:uppercase prose-h3:tracking-widest 
+                prose-h3:text-gray-500 dark:prose-h3:text-gray-400 font-sans
                 
-                /* Lists (The Gemini Style) */
+                /* H4: Story Titles (Neutral Color - NO LONGER BLUE) */
+                prose-h4:text-xl prose-h4:text-gray-900 dark:prose-h4:text-gray-100 
+                prose-h4:mt-8 prose-h4:mb-2 prose-h4:font-serif
+                
+                /* --- BODY TEXT --- */
+                prose-p:leading-relaxed prose-p:mb-6 prose-p:text-gray-800 dark:prose-p:text-gray-300
+                
+                /* --- LINKS (Editorial Amber Style) --- */
+                prose-a:text-amber-700 dark:prose-a:text-amber-500 
+                prose-a:no-underline hover:prose-a:underline prose-a:font-medium
+                
+                /* --- LISTS --- */
                 prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6
                 prose-li:my-2 prose-li:marker:text-gray-400
+                
+                /* --- EXTRAS --- */
+                prose-blockquote:border-l-amber-500 prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-white/5 prose-blockquote:py-1 prose-blockquote:px-4
               ">
-                {/* RENDER MARKDOWN HERE */}
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    // Optional: Custom overrides if you want specific behavior
+                    // Force links to open in new tab
                     a: ({node, ...props}) => <a target="_blank" rel="noopener noreferrer" {...props} />
                   }}
                 >
