@@ -36,7 +36,7 @@ export default function GideonBlog() {
       const { data, error } = await supabase
         .from('blog_entries')
         .select('*')
-        .eq('date', dateStr)
+        .eq('entry_date', dateStr)
         .maybeSingle() // Use maybeSingle to avoid errors on empty days
 
       setEntry(data) 
