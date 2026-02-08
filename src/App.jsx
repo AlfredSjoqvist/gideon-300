@@ -4,6 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { format, addDays, subDays } from 'date-fns'
 import { Moon, Sun, ChevronLeft, ChevronRight } from 'lucide-react'
 
+console.log('=== APP.JSX DEBUG ===')
+console.log('supabase import value:', supabase)
+console.log('supabase type:', typeof supabase)
+console.log('supabase is null:', supabase === null)
+console.log('supabase is undefined:', supabase === undefined)
+if (supabase) {
+  console.log('supabase.from exists:', typeof supabase.from)
+  console.log('supabase keys:', Object.keys(supabase).join(', '))
+}
+console.log('=====================')
+
 export default function GideonBlog() {
   const [darkMode, setDarkMode] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
