@@ -3,6 +3,9 @@ import { supabase } from './supabase'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, addDays, subDays } from 'date-fns'
 import { Moon, Sun, ChevronLeft, ChevronRight } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
 
 export default function GideonBlog() {
   const [darkMode, setDarkMode] = useState(false)
@@ -99,20 +102,36 @@ export default function GideonBlog() {
               </div>
             ) : entry ? (
               <article className="
-                /* Typography Core */
+                /* Typography & Layout */
                 prose prose-lg dark:prose-invert max-w-none
+                prose-headings:font-serif prose-headings:font-bold 
                 
-                /* Custom spacing for the 'Newspaper' feel */
-                prose-p:leading-relaxed 
-                prose-p:mb-6 
+                /* Headings */
+                prose-h1:text-4xl prose-h1:mb-8 
+                prose-h2:text-2xl prose-h2:mt-12 prose-h2:border-b prose-h2:pb-2 prose-h2:border-gray-200 dark:prose-h2:border-gray-800
+                prose-h3:text-xl prose-h3:mt-8 prose-h3:uppercase prose-h3:tracking-wide prose-h3:text-gray-500
+                prose-h4:text-lg prose-h4:text-blue-600 dark:prose-h4:text-blue-400 prose-h4:mt-6
                 
-                /* List Styles */
-                prose-li:my-1
+                /* Body Text */
+                prose-p:leading-relaxed prose-p:mb-6
                 
-                /* Image handling (if any) */
-                prose-img:rounded-xl prose-img:shadow-lg
+                /* Links */
+                prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+                
+                /* Lists (The Gemini Style) */
+                prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6
+                prose-li:my-2 prose-li:marker:text-gray-400
               ">
-                <div dangerouslySetInnerHTML={{ __html: entry.content }} />
+                {/* RENDER MARKDOWN HERE */}
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    // Optional: Custom overrides if you want specific behavior
+                    a: ({node, ...props}) => <a target="_blank" rel="noopener noreferrer" {...props} />
+                  }}
+                >
+                  {entry.content}
+                </ReactMarkdown>
               </article>
             ) : (
               <div className="text-center py-32 opacity-40 italic">
