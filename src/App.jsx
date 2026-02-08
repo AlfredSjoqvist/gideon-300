@@ -99,15 +99,18 @@ export default function GideonBlog() {
               </div>
             ) : entry ? (
               <article className="
+                /* Typography Core */
                 prose prose-lg dark:prose-invert max-w-none
-                prose-headings:font-serif prose-headings:font-bold
-                prose-h1:text-4xl prose-h1:mb-6 prose-h1:leading-tight
-                prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-gray-200 dark:prose-h2:border-gray-800 prose-h2:pb-2
-                prose-h3:text-lg prose-h3:uppercase prose-h3:tracking-widest prose-h3:text-gray-500 dark:prose-h3:text-gray-400 prose-h3:mt-10 prose-h3:mb-4
-                prose-p:leading-relaxed prose-p:text-gray-700 dark:prose-p:text-gray-300
-                prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
-                prose-strong:font-bold prose-strong:text-gray-900 dark:prose-strong:text-gray-100
-                prose-li:marker:text-gray-400
+                
+                /* Custom spacing for the 'Newspaper' feel */
+                prose-p:leading-relaxed 
+                prose-p:mb-6 
+                
+                /* List Styles */
+                prose-li:my-1
+                
+                /* Image handling (if any) */
+                prose-img:rounded-xl prose-img:shadow-lg
               ">
                 <div dangerouslySetInnerHTML={{ __html: entry.content }} />
               </article>
