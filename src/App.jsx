@@ -52,10 +52,7 @@ export default function GideonBlog() {
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       
-      {/* --- TIMELINE / TOP BAR --- 
-        CHANGED: Removed 'sticky top-0 z-20'. 
-        It now scrolls away with the page.
-      */}
+      {/* --- TIMELINE / TOP BAR --- */}
       <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md bg-white/80 dark:bg-gray-900/80">
         <div className="max-w-4xl mx-auto px-4 grid grid-cols-[1fr_auto_1fr] items-center">
           
@@ -82,7 +79,6 @@ export default function GideonBlog() {
                     `}
                   >
                     <span className="text-[10px] uppercase font-bold tracking-wider">{format(date, 'EEE')}</span>
-                    {/* Compact text size for dates on mobile */}
                     <span className="text-base md:text-xl font-serif">{format(date, 'd')}</span>
                   </motion.button>
                 )
@@ -108,15 +104,19 @@ export default function GideonBlog() {
       </div>
 
       {/* MAIN CONTENT */}
-      {/* Reduced padding p-4 to give text more width on mobile */}
       <main className="flex-1 max-w-4xl mx-auto w-full p-4 md:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDate.toString()}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            /* CHANGED: Replaced 'y' movement with a subtle Blur + Fade effect.
+               This prevents the text from "jumping" around while reading. */
+            initial={{ opacity: 0, filter: 'blur(5px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, filter: 'blur(5px)' }}
+            /* CHANGED: Faster ease-out transition feels snappier */
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            /* CHANGED: Added min-h to prevent layout collapse/jumping during loading */
+            className="min-h-[50vh]"
           >
             {loading ? (
               <div className="flex flex-col items-center justify-center py-32 opacity-50 space-y-4">
@@ -126,33 +126,27 @@ export default function GideonBlog() {
             ) : entry ? (
               <article className="
                 /* --- TYPOGRAPHY BASE --- */
-                /* Mobile: prose-sm (compact). Desktop: prose-lg */
                 prose prose-sm md:prose-lg dark:prose-invert max-w-none
                 prose-headings:font-serif prose-headings:font-bold 
                 
-                /* --- HEADINGS (Mobile Optimized) --- */
-                /* H1: text-2xl (was 3xl) + tracking-tight to prevent wrapping */
+                /* --- HEADINGS --- */
                 prose-h1:text-2xl md:prose-h1:text-4xl 
                 prose-h1:tracking-tight
                 prose-h1:mb-4 prose-h1:leading-tight
                 
-                /* H2: text-lg (was xl) - smaller dividers */
                 prose-h2:text-lg md:prose-h2:text-2xl 
                 prose-h2:mt-8 prose-h2:border-b prose-h2:pb-2 
                 prose-h2:border-gray-200 dark:prose-h2:border-gray-800
                 
-                /* H3: Labels */
                 prose-h3:text-xs md:prose-h3:text-lg 
                 prose-h3:mt-6 prose-h3:uppercase prose-h3:tracking-widest 
                 prose-h3:text-gray-500 dark:prose-h3:text-gray-400 font-sans
                 
-                /* H4: Story Titles - text-base (was lg) */
                 prose-h4:text-base md:prose-h4:text-xl 
                 prose-h4:text-gray-900 dark:prose-h4:text-gray-100 
                 prose-h4:mt-6 prose-h4:mb-2 prose-h4:font-serif
                 
                 /* --- BODY & LINKS --- */
-                /* P: Force text-sm (14px) on mobile */
                 prose-p:text-sm md:prose-p:text-lg
                 prose-p:leading-relaxed prose-p:mb-3 md:prose-p:mb-6 
                 prose-p:text-gray-800 dark:prose-p:text-gray-300
@@ -171,7 +165,6 @@ export default function GideonBlog() {
                   components={{
                     a: ({node, ...props}) => <a target="_blank" rel="noopener noreferrer" {...props} />,
                     
-                    // CUSTOM H1: Copy Button
                     h1: ({node, ...props}) => (
                       <div className="flex items-start justify-between group gap-4">
                         <h1 {...props} className="flex-1 m-0" />
