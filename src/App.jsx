@@ -69,18 +69,32 @@ export default function GideonBlog() {
               {timelineDates.map((date, i) => {
                 const isSelected = i === 2 
                 return (
-                  <motion.button
+                  <button
                     key={date.toString()}
-                    layout
                     onClick={() => setSelectedDate(date)}
-                    className={`
-                      flex flex-col items-center justify-center w-12 h-14 md:w-14 md:h-16 rounded-xl transition-all
-                      ${isSelected ? 'bg-black text-white dark:bg-white dark:text-black shadow-lg scale-110' : 'hover:bg-black/5 dark:hover:bg-white/5 opacity-40'}
-                    `}
+                    className="relative flex flex-col items-center justify-center w-12 h-14 md:w-14 md:h-16 rounded-xl transition-all"
                   >
-                    <span className="text-[10px] uppercase font-bold tracking-wider">{format(date, 'EEE')}</span>
-                    <span className="text-base md:text-xl font-serif">{format(date, 'd')}</span>
-                  </motion.button>
+                    {/* --- SMOOTH SLIDING BACKGROUND --- 
+                       We conditionally render this div only for the selected item.
+                       'layoutId' performs the magic: it animates the box from the 
+                       previous button to this one automatically.
+                    */}
+                    {isSelected && (
+                      <motion.div
+                        layoutId="active-pill"
+                        className="absolute inset-0 bg-black dark:bg-white rounded-xl shadow-md"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+
+                    {/* TEXT CONTENT (Must be z-10 to sit on top of the black box) */}
+                    <span className={`relative z-10 text-[10px] uppercase font-bold tracking-wider ${isSelected ? 'text-white dark:text-black' : 'text-gray-500 dark:text-gray-400'}`}>
+                      {format(date, 'EEE')}
+                    </span>
+                    <span className={`relative z-10 text-base md:text-xl font-serif ${isSelected ? 'text-white dark:text-black' : 'text-gray-900 dark:text-gray-100'}`}>
+                      {format(date, 'd')}
+                    </span>
+                  </button>
                 )
               })}
             </div>
@@ -108,14 +122,10 @@ export default function GideonBlog() {
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDate.toString()}
-            /* CHANGED: Replaced 'y' movement with a subtle Blur + Fade effect.
-               This prevents the text from "jumping" around while reading. */
             initial={{ opacity: 0, filter: 'blur(5px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(5px)' }}
-            /* CHANGED: Faster ease-out transition feels snappier */
             transition={{ duration: 0.3, ease: "easeOut" }}
-            /* CHANGED: Added min-h to prevent layout collapse/jumping during loading */
             className="min-h-[50vh]"
           >
             {loading ? (
@@ -125,11 +135,9 @@ export default function GideonBlog() {
               </div>
             ) : entry ? (
               <article className="
-                /* --- TYPOGRAPHY BASE --- */
                 prose prose-sm md:prose-lg dark:prose-invert max-w-none
                 prose-headings:font-serif prose-headings:font-bold 
                 
-                /* --- HEADINGS --- */
                 prose-h1:text-2xl md:prose-h1:text-4xl 
                 prose-h1:tracking-tight
                 prose-h1:mb-4 prose-h1:leading-tight
@@ -146,7 +154,6 @@ export default function GideonBlog() {
                 prose-h4:text-gray-900 dark:prose-h4:text-gray-100 
                 prose-h4:mt-6 prose-h4:mb-2 prose-h4:font-serif
                 
-                /* --- BODY & LINKS --- */
                 prose-p:text-sm md:prose-p:text-lg
                 prose-p:leading-relaxed prose-p:mb-3 md:prose-p:mb-6 
                 prose-p:text-gray-800 dark:prose-p:text-gray-300
@@ -154,7 +161,6 @@ export default function GideonBlog() {
                 prose-a:text-amber-700 dark:prose-a:text-amber-500 
                 prose-a:no-underline hover:prose-a:underline prose-a:font-medium
                 
-                /* --- LISTS & EXTRAS --- */
                 prose-ul:my-3 md:prose-ul:my-6 prose-ul:list-disc prose-ul:pl-4 md:prose-ul:pl-6
                 prose-li:my-1 md:prose-li:my-2 prose-li:marker:text-gray-400
                 
