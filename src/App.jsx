@@ -54,30 +54,31 @@ export default function GideonBlog() {
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       
       {/* HEADER */}
-      {/* CHANGED: Relative positioning for absolute button, reduced padding (py-6), wider max-w-4xl */}
-      <header className="relative py-6 px-6 flex items-center justify-center max-w-4xl mx-auto w-full">
+      {/* Using relative positioning to allow absolute centering of the logo */}
+      <header className="relative py-8 px-6 flex justify-between items-end max-w-4xl mx-auto w-full" style={{minHeight: '120px'}}>
         
-        {/* --- CENTERED BRAND GROUP --- */}
-        <div className="flex items-center gap-5">
-          
-          {/* LOGO: Larger (w-32) and Central */}
-          <div className="w-28 h-28 md:w-32 md:h-32 flex-shrink-0 flex items-center justify-center">
-             <img 
-               src={gideonLogo} 
-               alt="Gideon Logo" 
-               className="w-full h-full object-contain dark:invert-0 drop-shadow-sm" 
-             />
-          </div>
-          
-          {/* TITLE: Smaller (text-6xl) but Bold */}
-          <h1 className="text-5xl md:text-6xl font-serif font-black tracking-tighter leading-none text-gray-900 dark:text-gray-100">
+        {/* --- LEFT: GIDEON TEXT (z-10 to stay on top) --- */}
+        <div className="flex-1 flex justify-start z-10">
+          <h1 className="text-5xl md:text-7xl font-serif font-black tracking-tighter leading-none text-gray-900 dark:text-gray-100">
             Gideon
           </h1>
         </div>
 
-        {/* --- DARK MODE TOGGLE: Pushed to absolute right --- */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2">
-          <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+        {/* --- CENTER: LOGO (Absolutely positioned dead center) --- */}
+        {/* Increased size significantly for impact */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center pointer-events-none">
+            <div className="w-36 h-36 md:w-44 md:h-44 flex-shrink-0 flex items-center justify-center">
+              <img 
+                src={gideonLogo} 
+                alt="Gideon Logo" 
+                className="w-full h-full object-contain dark:invert-0 drop-shadow-sm opacity-95" 
+              />
+            </div>
+        </div>
+
+        {/* --- RIGHT: DARK MODE TOGGLE (z-10 to stay on top) --- */}
+        <div className="flex-1 flex justify-end z-10 pb-2">
+          <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm shadow-sm">
             {darkMode ? <Sun size={24} /> : <Moon size={24} />}
           </button>
         </div>
@@ -85,7 +86,6 @@ export default function GideonBlog() {
 
       {/* TIMELINE */}
       <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80">
-        {/* CHANGED: max-w-4xl */}
         <div className="max-w-4xl mx-auto flex items-center justify-between px-4">
           <button onClick={() => setSelectedDate(subDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors">
             <ChevronLeft size={18} />
@@ -116,7 +116,6 @@ export default function GideonBlog() {
       </div>
 
       {/* MAIN CONTENT */}
-      {/* CHANGED: max-w-4xl */}
       <main className="flex-1 max-w-4xl mx-auto w-full p-6 md:p-8">
         <AnimatePresence mode="wait">
           <motion.div
