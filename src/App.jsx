@@ -57,7 +57,7 @@ export default function GideonBlog() {
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-black dark:bg-white shadow-sm">
              <img 
-               src="/gideon-logo.png"
+               src="/gideon-300/gideon-logo.png"
                alt="Gideon Logo" 
                className="w-full h-full object-cover"
              />
