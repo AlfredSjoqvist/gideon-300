@@ -11,7 +11,7 @@ export default function GideonBlog() {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [entry, setEntry] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [copied, setCopied] = useState(false) // New state for copy feedback
+  const [copied, setCopied] = useState(false)
 
   // Toggle Dark Mode
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function GideonBlog() {
       if (error) console.error("Error:", error)
       setEntry(data) 
       setLoading(false)
-      setCopied(false) // Reset copy state on new date
+      setCopied(false)
     }
     fetchEntry()
   }, [selectedDate])
@@ -44,7 +44,7 @@ export default function GideonBlog() {
     if (!entry?.content) return
     navigator.clipboard.writeText(entry.content)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000) // Reset after 2s
+    setTimeout(() => setCopied(false), 2000)
   }
 
   const timelineDates = [-2, -1, 0, 1, 2].map(d => addDays(selectedDate, d))
@@ -54,10 +54,15 @@ export default function GideonBlog() {
       
       {/* HEADER */}
       <header className="p-6 flex justify-between items-center max-w-3xl mx-auto w-full">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-black dark:bg-white rounded-full flex items-center justify-center">
-             <span className="text-white dark:text-black font-serif font-bold text-xl">G</span>
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-black dark:bg-white shadow-sm">
+             <img 
+               src="/gideon-logo.png"
+               alt="Gideon Logo" 
+               className="w-full h-full object-cover"
+             />
           </div>
+          
           <h1 className="text-2xl font-serif font-bold tracking-tight">Gideon</h1>
         </div>
         <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
@@ -159,7 +164,8 @@ export default function GideonBlog() {
                         <h1 {...props} className="flex-1 m-0" />
                         <button 
                           onClick={handleCopy}
-                          className="mt-2 p-2 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                          // CHANGED: Removed opacity-0 and group-hover classes
+                          className="mt-2 p-2 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-all"
                           title="Copy Briefing"
                         >
                           {copied ? <Check size={20} className="text-green-600 dark:text-green-400" /> : <Copy size={20} />}
