@@ -5,7 +5,8 @@ import { format, addDays, subDays } from 'date-fns'
 import { Moon, Sun, ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import gideonLogo from './assets/gideon-logo.png' 
+
+// Removed gideonLogo import as it is no longer used.
 
 export default function GideonBlog() {
   const [darkMode, setDarkMode] = useState(false)
@@ -53,77 +54,57 @@ export default function GideonBlog() {
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       
-      {/* --- MASTHEAD HEADER ---
-        Switched to CSS GRID: 
-        [1fr (Text) | auto (Logo) | 1fr (Button)]
-        This ensures the logo is DEAD CENTER relative to the page, 
-        but statically positioned so it pushes the header height open (no more cutoff).
+      {/* --- TIMELINE / TOP BAR --- 
+        Now acts as the main navigation bar.
+        Layout: Grid [1fr (Spacer) | auto (Nav) | 1fr (Toggle)]
       */}
-      <header className="w-full max-w-7xl mx-auto px-6 py-12 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-        
-        {/* LEFT: Massive Title */}
-        <div className="justify-self-start">
-          <h1 className="text-6xl md:text-9xl font-serif font-black tracking-tighter text-gray-900 dark:text-gray-100 leading-none select-none">
-            Gideon
-          </h1>
-        </div>
-
-        {/* CENTER: The Torch (Static Flow + Animation) */}
-        <motion.div 
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="justify-self-center"
-        >
-          {/* Sizing: w-56 (224px) is huge and heroic. The header will grow to fit this. */}
-          <div className="w-32 h-32 md:w-56 md:h-56 relative select-none">
-             <img 
-               src={gideonLogo} 
-               alt="Gideon Logo" 
-               className="w-full h-full object-contain drop-shadow-2xl dark:invert-0" 
-             />
-          </div>
-        </motion.div>
-
-        {/* RIGHT: Toggle Button */}
-        <div className="justify-self-end">
-          <button 
-            onClick={() => setDarkMode(!darkMode)} 
-            className="p-3 md:p-4 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors bg-black/5 dark:bg-white/5 backdrop-blur-sm"
-          >
-            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
-        </div>
-      </header>
-
-      {/* TIMELINE */}
       <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80">
-        <div className="max-w-4xl mx-auto flex items-center justify-between px-4">
-          <button onClick={() => setSelectedDate(subDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors">
-            <ChevronLeft size={18} />
-          </button>
-          <div className="flex gap-2 justify-center w-full">
-            {timelineDates.map((date, i) => {
-              const isSelected = i === 2 
-              return (
-                <motion.button
-                  key={date.toString()}
-                  layout
-                  onClick={() => setSelectedDate(date)}
-                  className={`
-                    flex flex-col items-center justify-center w-14 h-16 rounded-xl transition-all
-                    ${isSelected ? 'bg-black text-white dark:bg-white dark:text-black shadow-lg scale-110' : 'hover:bg-black/5 dark:hover:bg-white/5 opacity-40'}
-                  `}
-                >
-                  <span className="text-[10px] uppercase font-bold tracking-wider">{format(date, 'EEE')}</span>
-                  <span className="text-xl font-serif">{format(date, 'd')}</span>
-                </motion.button>
-              )
-            })}
+        <div className="max-w-4xl mx-auto px-4 grid grid-cols-[1fr_auto_1fr] items-center">
+          
+          {/* 1. LEFT SPACER (Keeps the center element perfectly centered) */}
+          <div className="hidden md:block" /> 
+
+          {/* 2. CENTER: NAVIGATION CLUSTER */}
+          <div className="flex items-center gap-2 md:gap-4 justify-center col-span-2 md:col-span-1">
+            <button onClick={() => setSelectedDate(subDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
+              <ChevronLeft size={18} />
+            </button>
+            
+            <div className="flex gap-2">
+              {timelineDates.map((date, i) => {
+                const isSelected = i === 2 
+                return (
+                  <motion.button
+                    key={date.toString()}
+                    layout
+                    onClick={() => setSelectedDate(date)}
+                    className={`
+                      flex flex-col items-center justify-center w-12 h-14 md:w-14 md:h-16 rounded-xl transition-all
+                      ${isSelected ? 'bg-black text-white dark:bg-white dark:text-black shadow-lg scale-110' : 'hover:bg-black/5 dark:hover:bg-white/5 opacity-40'}
+                    `}
+                  >
+                    <span className="text-[10px] uppercase font-bold tracking-wider">{format(date, 'EEE')}</span>
+                    <span className="text-lg md:text-xl font-serif">{format(date, 'd')}</span>
+                  </motion.button>
+                )
+              })}
+            </div>
+
+            <button onClick={() => setSelectedDate(addDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
+              <ChevronRight size={18} />
+            </button>
           </div>
-          <button onClick={() => setSelectedDate(addDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors">
-            <ChevronRight size={18} />
-          </button>
+
+          {/* 3. RIGHT: DARK MODE TOGGLE */}
+          <div className="flex justify-end col-start-3 row-start-1 md:row-auto">
+            <button 
+                onClick={() => setDarkMode(!darkMode)} 
+                className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white"
+            >
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+          </div>
+
         </div>
       </div>
 
