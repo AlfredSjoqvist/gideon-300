@@ -54,11 +54,11 @@ export default function GideonBlog() {
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       
       {/* HEADER */}
-      {/* Increased vertical padding (py-10) to let the large logo breathe */}
-      <header className="py-10 px-6 flex justify-between items-center max-w-3xl mx-auto w-full">
-        <div className="flex items-center gap-6">
+      {/* Changed max-w-3xl to max-w-4xl for wider layout */}
+      <header className="py-10 px-6 flex justify-between items-center max-w-4xl mx-auto w-full">
+        <div className="flex items-center gap-4"> {/* Reduced gap from 6 to 4 */}
           
-          {/* --- LOGO: Bumped to w-28 (112px) for impact --- */}
+          {/* --- LOGO --- */}
           <div className="w-24 h-24 md:w-28 md:h-28 flex-shrink-0 flex items-center justify-center">
              <img 
                src={gideonLogo} 
@@ -67,15 +67,10 @@ export default function GideonBlog() {
              />
           </div>
           
-          {/* --- TITLE: Massive text with a subtitle --- */}
-          <div className="flex flex-col justify-center">
-            <h1 className="text-5xl md:text-7xl font-serif font-black tracking-tighter leading-none text-gray-900 dark:text-gray-100">
-              Gideon
-            </h1>
-            <span className="text-xs md:text-sm uppercase tracking-[0.25em] text-gray-500 font-sans font-medium mt-1 ml-1">
-              Intelligence Briefing
-            </span>
-          </div>
+          {/* --- TITLE (Removed Subtitle, increased size) --- */}
+          <h1 className="text-6xl md:text-8xl font-serif font-black tracking-tighter leading-none text-gray-900 dark:text-gray-100">
+            Gideon
+          </h1>
         </div>
 
         <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
@@ -85,7 +80,8 @@ export default function GideonBlog() {
 
       {/* TIMELINE */}
       <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80">
-        <div className="max-w-3xl mx-auto flex items-center justify-between px-4">
+        {/* Changed max-w-3xl to max-w-4xl */}
+        <div className="max-w-4xl mx-auto flex items-center justify-between px-4">
           <button onClick={() => setSelectedDate(subDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors">
             <ChevronLeft size={18} />
           </button>
@@ -115,7 +111,8 @@ export default function GideonBlog() {
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 max-w-3xl mx-auto w-full p-6 md:p-8">
+      {/* Changed max-w-3xl to max-w-4xl */}
+      <main className="flex-1 max-w-4xl mx-auto w-full p-6 md:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDate.toString()}
