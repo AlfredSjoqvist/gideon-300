@@ -2,22 +2,24 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, addDays, subDays } from 'date-fns'
-import { Moon, Sun, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Moon, Sun, ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-
 
 export default function GideonBlog() {
   const [darkMode, setDarkMode] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [entry, setEntry] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [copied, setCopied] = useState(false) // New state for copy feedback
 
+  // Toggle Dark Mode
   useEffect(() => {
     if (darkMode) document.documentElement.classList.add('dark')
     else document.documentElement.classList.remove('dark')
   }, [darkMode])
 
+  // Fetch Entry
   useEffect(() => {
     async function fetchEntry() {
       setLoading(true)
@@ -32,9 +34,18 @@ export default function GideonBlog() {
       if (error) console.error("Error:", error)
       setEntry(data) 
       setLoading(false)
+      setCopied(false) // Reset copy state on new date
     }
     fetchEntry()
   }, [selectedDate])
+
+  // Copy Logic
+  const handleCopy = () => {
+    if (!entry?.content) return
+    navigator.clipboard.writeText(entry.content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000) // Reset after 2s
+  }
 
   const timelineDates = [-2, -1, 0, 1, 2].map(d => addDays(selectedDate, d))
 
@@ -49,7 +60,7 @@ export default function GideonBlog() {
           </div>
           <h1 className="text-2xl font-serif font-bold tracking-tight">Gideon</h1>
         </div>
-        <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10">
+        <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
           {darkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
       </header>
@@ -57,7 +68,7 @@ export default function GideonBlog() {
       {/* TIMELINE */}
       <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80">
         <div className="max-w-3xl mx-auto flex items-center justify-between px-4">
-          <button onClick={() => setSelectedDate(subDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10">
+          <button onClick={() => setSelectedDate(subDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors">
             <ChevronLeft size={18} />
           </button>
           <div className="flex gap-2 justify-center w-full">
@@ -79,7 +90,7 @@ export default function GideonBlog() {
               )
             })}
           </div>
-          <button onClick={() => setSelectedDate(addDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10">
+          <button onClick={() => setSelectedDate(addDays(selectedDate, 1))} className="p-2 hover:bg-black/5 rounded-full dark:hover:bg-white/10 transition-colors">
             <ChevronRight size={18} />
           </button>
         </div>
@@ -101,31 +112,31 @@ export default function GideonBlog() {
                 <p className="text-xs tracking-widest uppercase">Decrypting Intelligence...</p>
               </div>
             ) : entry ? (
-             <article className="
+              <article className="
                 /* --- TYPOGRAPHY BASE --- */
                 prose prose-lg dark:prose-invert max-w-none
                 prose-headings:font-serif prose-headings:font-bold 
                 
                 /* --- HEADINGS --- */
-                /* H1: Main Title (Huge & Serif) */
+                /* H1: Main Title (Custom Layout below handles styling) */
                 prose-h1:text-4xl prose-h1:mb-8 prose-h1:leading-tight
                 
-                /* H2: Section Dividers (Bordered) */
+                /* H2: Section Dividers */
                 prose-h2:text-2xl prose-h2:mt-12 prose-h2:border-b prose-h2:pb-2 
                 prose-h2:border-gray-200 dark:prose-h2:border-gray-800
                 
-                /* H3: Labels (Uppercase & Tracking) */
+                /* H3: Labels */
                 prose-h3:text-lg prose-h3:mt-8 prose-h3:uppercase prose-h3:tracking-widest 
                 prose-h3:text-gray-500 dark:prose-h3:text-gray-400 font-sans
                 
-                /* H4: Story Titles (Neutral Color - NO LONGER BLUE) */
+                /* H4: Story Titles */
                 prose-h4:text-xl prose-h4:text-gray-900 dark:prose-h4:text-gray-100 
                 prose-h4:mt-8 prose-h4:mb-2 prose-h4:font-serif
                 
                 /* --- BODY TEXT --- */
                 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-gray-800 dark:prose-p:text-gray-300
                 
-                /* --- LINKS (Editorial Amber Style) --- */
+                /* --- LINKS --- */
                 prose-a:text-amber-700 dark:prose-a:text-amber-500 
                 prose-a:no-underline hover:prose-a:underline prose-a:font-medium
                 
@@ -139,8 +150,22 @@ export default function GideonBlog() {
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    // Force links to open in new tab
-                    a: ({node, ...props}) => <a target="_blank" rel="noopener noreferrer" {...props} />
+                    // Links open in new tab
+                    a: ({node, ...props}) => <a target="_blank" rel="noopener noreferrer" {...props} />,
+                    
+                    // CUSTOM H1: Injects the Copy Button next to the title
+                    h1: ({node, ...props}) => (
+                      <div className="flex items-start justify-between group gap-4">
+                        <h1 {...props} className="flex-1 m-0" />
+                        <button 
+                          onClick={handleCopy}
+                          className="mt-2 p-2 rounded-lg bg-gray-100 dark:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                          title="Copy Briefing"
+                        >
+                          {copied ? <Check size={20} className="text-green-600 dark:text-green-400" /> : <Copy size={20} />}
+                        </button>
+                      </div>
+                    )
                   }}
                 >
                   {entry.content}
