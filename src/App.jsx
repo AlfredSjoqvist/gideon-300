@@ -6,8 +6,6 @@ import { Moon, Sun, ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-// Removed gideonLogo import as it is no longer used.
-
 export default function GideonBlog() {
   const [darkMode, setDarkMode] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
@@ -55,13 +53,12 @@ export default function GideonBlog() {
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       
       {/* --- TIMELINE / TOP BAR --- 
-        Now acts as the main navigation bar.
-        Layout: Grid [1fr (Spacer) | auto (Nav) | 1fr (Toggle)]
+        CHANGED: Removed 'sticky top-0 z-20' so it scrolls away.
       */}
-      <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80">
+      <div className="py-4 border-b border-black/5 dark:border-white/5 backdrop-blur-md bg-white/80 dark:bg-gray-900/80">
         <div className="max-w-4xl mx-auto px-4 grid grid-cols-[1fr_auto_1fr] items-center">
           
-          {/* 1. LEFT SPACER (Keeps the center element perfectly centered) */}
+          {/* 1. LEFT SPACER */}
           <div className="hidden md:block" /> 
 
           {/* 2. CENTER: NAVIGATION CLUSTER */}
@@ -84,7 +81,8 @@ export default function GideonBlog() {
                     `}
                   >
                     <span className="text-[10px] uppercase font-bold tracking-wider">{format(date, 'EEE')}</span>
-                    <span className="text-lg md:text-xl font-serif">{format(date, 'd')}</span>
+                    {/* Compact text size for dates on mobile */}
+                    <span className="text-base md:text-xl font-serif">{format(date, 'd')}</span>
                   </motion.button>
                 )
               })}
@@ -109,7 +107,8 @@ export default function GideonBlog() {
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 max-w-4xl mx-auto w-full p-6 md:p-8">
+      {/* CHANGED: Reduced padding on mobile (p-4) to fit more width */}
+      <main className="flex-1 max-w-4xl mx-auto w-full p-4 md:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedDate.toString()}
@@ -126,26 +125,41 @@ export default function GideonBlog() {
             ) : entry ? (
               <article className="
                 /* --- TYPOGRAPHY BASE --- */
-                prose prose-lg dark:prose-invert max-w-none
+                /* CHANGED: prose-sm on mobile (small text), prose-lg on desktop */
+                prose prose-sm md:prose-lg dark:prose-invert max-w-none
                 prose-headings:font-serif prose-headings:font-bold 
                 
                 /* --- HEADINGS --- */
-                prose-h1:text-4xl prose-h1:mb-8 prose-h1:leading-tight
-                prose-h2:text-2xl prose-h2:mt-12 prose-h2:border-b prose-h2:pb-2 
+                /* H1: Smaller on mobile (3xl) vs Desktop (4xl) */
+                prose-h1:text-3xl md:prose-h1:text-4xl 
+                prose-h1:mb-6 prose-h1:leading-tight
+                
+                /* H2: Smaller on mobile (xl) vs Desktop (2xl) */
+                prose-h2:text-xl md:prose-h2:text-2xl 
+                prose-h2:mt-10 prose-h2:border-b prose-h2:pb-2 
                 prose-h2:border-gray-200 dark:prose-h2:border-gray-800
-                prose-h3:text-lg prose-h3:mt-8 prose-h3:uppercase prose-h3:tracking-widest 
+                
+                /* H3: Labels */
+                prose-h3:text-sm md:prose-h3:text-lg 
+                prose-h3:mt-6 prose-h3:uppercase prose-h3:tracking-widest 
                 prose-h3:text-gray-500 dark:prose-h3:text-gray-400 font-sans
-                prose-h4:text-xl prose-h4:text-gray-900 dark:prose-h4:text-gray-100 
-                prose-h4:mt-8 prose-h4:mb-2 prose-h4:font-serif
+                
+                /* H4: Story Titles */
+                prose-h4:text-lg md:prose-h4:text-xl 
+                prose-h4:text-gray-900 dark:prose-h4:text-gray-100 
+                prose-h4:mt-6 prose-h4:mb-2 prose-h4:font-serif
                 
                 /* --- BODY & LINKS --- */
-                prose-p:leading-relaxed prose-p:mb-6 prose-p:text-gray-800 dark:prose-p:text-gray-300
+                prose-p:leading-relaxed prose-p:mb-4 md:prose-p:mb-6 
+                prose-p:text-gray-800 dark:prose-p:text-gray-300
+                
                 prose-a:text-amber-700 dark:prose-a:text-amber-500 
                 prose-a:no-underline hover:prose-a:underline prose-a:font-medium
                 
                 /* --- LISTS & EXTRAS --- */
-                prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6
-                prose-li:my-2 prose-li:marker:text-gray-400
+                prose-ul:my-4 md:prose-ul:my-6 prose-ul:list-disc prose-ul:pl-4 md:prose-ul:pl-6
+                prose-li:my-1 md:prose-li:my-2 prose-li:marker:text-gray-400
+                
                 prose-blockquote:border-l-amber-500 prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-white/5 prose-blockquote:py-1 prose-blockquote:px-4
               ">
                 <ReactMarkdown 
@@ -159,10 +173,10 @@ export default function GideonBlog() {
                         <h1 {...props} className="flex-1 m-0" />
                         <button 
                           onClick={handleCopy}
-                          className="mt-2 p-2 rounded-lg bg-transparent hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-black dark:hover:text-white transition-all"
+                          className="mt-1 p-2 rounded-lg bg-transparent hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-black dark:hover:text-white transition-all"
                           title="Copy Briefing"
                         >
-                          {copied ? <Check size={20} className="text-green-600 dark:text-green-400" /> : <Copy size={20} />}
+                          {copied ? <Check size={18} className="text-green-600 dark:text-green-400" /> : <Copy size={18} />}
                         </button>
                       </div>
                     )
